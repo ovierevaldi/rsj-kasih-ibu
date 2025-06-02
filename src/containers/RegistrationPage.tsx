@@ -5,6 +5,9 @@ import type { JenisPengobatanProp } from "../types/JenisPengobatan.types";
 import type { MetodePembayaranProp } from "../types/MetodePembayaran.types";
 import MetodePembayaranService from "../services/metodePembayaran.service";
 import { JENIS_KELAMIN } from "../types/JenisKelamin.enum";
+import JadwalPengobatanService from "../services/jadwalPengobatan.service";
+import { formatDateToJadwal, formatDateToYMD } from "../helpers/dateFormat";
+import type { JadwalPengobatanProp } from "../types/JadwalPengobatan.types";
 
 const RegistrationPage = () => {
   const navigate = useNavigate();
@@ -15,6 +18,7 @@ const RegistrationPage = () => {
 
   const [jenisPengobatan, setJenisPengobatan] = useState<JenisPengobatanProp[]>([]);
   const [listMetodePembayaran, setListMetodePembayaran] = useState<MetodePembayaranProp[]>([]);
+  const [jadwalPengobatan, setJadwalPengobatan] = useState<JadwalPengobatanProp[]>([]);
 
   //#region API Calls
   const fetchJenisPengobatan = async () => {
@@ -35,11 +39,23 @@ const RegistrationPage = () => {
     } catch (error) {
       console.error("Error fetching dokter list:", error);
     }
+  };
+
+  const fetchJadwalPengobatanHariIni = async () => {
+    try {
+      const formatDate = formatDateToYMD(new Date());
+
+      const data = await JadwalPengobatanService.getListJadwalPengobatan(formatDate);
+      setJadwalPengobatan(data)
+    } catch (error) {
+      
+    }
   }
 
   useEffect(() => {
     fetchJenisPengobatan();
-    fetchListMetodePembayaran()
+    fetchListMetodePembayaran();
+    fetchJadwalPengobatanHariIni();
   }, [])
  
   //#endregion
@@ -97,7 +113,11 @@ const RegistrationPage = () => {
 
         <div>Pilih Jam Pengobatan</div>
           <select name="" id="" className='border'>
-            <option value="">Dr. Brando, 17:00 23-Jan-2025</option>
+            {
+              jadwalPengobatan.map((jp: JadwalPengobatanProp) => (
+                <option value={jp.id}>{jp.id_dokter} {formatDateToJadwal(new Date(jp.jadwal))}</option>
+              ))
+            }
         </select>
 
         <div>Metode Pembayaran</div>
