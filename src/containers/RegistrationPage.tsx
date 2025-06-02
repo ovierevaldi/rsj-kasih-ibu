@@ -20,11 +20,14 @@ const RegistrationPage = () => {
   const [listMetodePembayaran, setListMetodePembayaran] = useState<MetodePembayaranProp[]>([]);
   const [jadwalPengobatan, setJadwalPengobatan] = useState<JadwalPengobatanProp[]>([]);
 
+  const [selectedJenisPengobatan, setSelectedJenisPengobatan] = useState<JenisPengobatanProp | null>(null);
+
   //#region API Calls
   const fetchJenisPengobatan = async () => {
     try {
       const data = await JenisPengobatanService.getListJenisPengobatan();
       setJenisPengobatan(data);
+      setSelectedJenisPengobatan(data[0] || null); // Set the first item as default if available
 
     } catch (error) {
       console.error("Error fetching dokter list:", error);
@@ -44,19 +47,29 @@ const RegistrationPage = () => {
   const fetchJadwalPengobatanHariIni = async () => {
     try {
       const formatDate = formatDateToYMD(new Date());
-
-      const data = await JadwalPengobatanService.getListJadwalPengobatan(formatDate);
+      const data = await JadwalPengobatanService.getListJadwalPengobatan(formatDate, selectedJenisPengobatan?.id);
       setJadwalPengobatan(data)
     } catch (error) {
       
     }
+  };
+
+  const handleSelectedJenisPengobatan = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedId = parseInt(e.target.value); 
+    const selected = jenisPengobatan.find(jp => jp.id === selectedId) || null;
+    setSelectedJenisPengobatan(selected);
   }
 
   useEffect(() => {
     fetchJenisPengobatan();
     fetchListMetodePembayaran();
+    
+  }, []);
+
+  useEffect(() => {
+    if(!selectedJenisPengobatan) return;
     fetchJadwalPengobatanHariIni();
-  }, [])
+  }, [selectedJenisPengobatan])
  
   //#endregion
 
@@ -103,19 +116,24 @@ const RegistrationPage = () => {
         </div>
 
         <div>Pilih Pengobatan</div>
-          <select name="" id="" className='border'>
+          <select 
+            name="jenis-pengobatan" 
+            id="jenis-pengobatan" 
+            className='border'
+            onChange={handleSelectedJenisPengobatan}
+          >
             {
               jenisPengobatan.map((jp: JenisPengobatanProp) => (
                 <option value={jp.id}>{jp.nama_pengobatan}</option>
               ))
             }
-        </select>
+          </select>
 
         <div>Pilih Jam Pengobatan</div>
           <select name="" id="" className='border'>
             {
               jadwalPengobatan.map((jp: JadwalPengobatanProp) => (
-                <option value={jp.id}>{jp.id_dokter} {formatDateToJadwal(new Date(jp.jadwal))}</option>
+                <option value={jp.id}>{jp.nama_dokter} {formatDateToJadwal(new Date(jp.jadwal))}</option>
               ))
             }
         </select>
