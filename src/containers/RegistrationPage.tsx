@@ -1,11 +1,33 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
+import JenisPengobatanService from "../services/jenisPengobatan.service";
+import type { JenisPengobatanProp } from "../types/JenisPengobatan.types";
 
 const RegistrationPage = () => {
   const navigate = useNavigate();
 
   const handleSubmit = () => {
     navigate('/success')
+  };
+
+  const [jenisPengobatan, setJenisPengobatan] = useState<JenisPengobatanProp[]>([]);
+
+  //#region API Calls
+  const fetchJenisPengobatan = async () => {
+    try {
+      const data = await JenisPengobatanService.getListJenisPengobatan();
+      setJenisPengobatan(data);
+
+    } catch (error) {
+      console.error("Error fetching dokter list:", error);
+    }
   }
+
+  useEffect(() => {
+    fetchJenisPengobatan();
+  }, [])
+ 
+  //#endregion
 
   return (
     <>
@@ -13,7 +35,9 @@ const RegistrationPage = () => {
         <div>Pendaftaran Pasien RSJ Kasih Ibu</div>
         <img src='https://placehold.co/100x100' alt='Logo RS'/>
       </div>
-
+    {
+      JSON.stringify(jenisPengobatan)
+    }
       <form action="" className='grid grid-cols-2'>
           <div>Nama Pasien</div>
           <input type="text" className='border' />
@@ -48,7 +72,11 @@ const RegistrationPage = () => {
 
         <div>Pilih Pengobatan</div>
           <select name="" id="" className='border'>
-            <option value="">Ruqyah</option>
+            {
+              jenisPengobatan.map((jp: JenisPengobatanProp) => (
+                <option value={jp.id}>{jp.nama_pengobatan}</option>
+              ))
+            }
         </select>
 
         <div>Pilih Jam Pengobatan</div>
