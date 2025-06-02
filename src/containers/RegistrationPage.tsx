@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import JenisPengobatanService from "../services/jenisPengobatan.service";
 import type { JenisPengobatanProp } from "../types/JenisPengobatan.types";
+import type { MetodePembayaranProp } from "../types/MetodePembayaran.types";
+import MetodePembayaranService from "../services/metodePembayaran.service";
+import { JENIS_KELAMIN } from "../types/JenisKelamin.enum";
 
 const RegistrationPage = () => {
   const navigate = useNavigate();
@@ -11,6 +14,7 @@ const RegistrationPage = () => {
   };
 
   const [jenisPengobatan, setJenisPengobatan] = useState<JenisPengobatanProp[]>([]);
+  const [listMetodePembayaran, setListMetodePembayaran] = useState<MetodePembayaranProp[]>([]);
 
   //#region API Calls
   const fetchJenisPengobatan = async () => {
@@ -21,10 +25,21 @@ const RegistrationPage = () => {
     } catch (error) {
       console.error("Error fetching dokter list:", error);
     }
+  };
+
+  const fetchListMetodePembayaran = async () => {
+    try {
+      const data = await MetodePembayaranService.getListMetodePembayaran();
+      setListMetodePembayaran(data);
+
+    } catch (error) {
+      console.error("Error fetching dokter list:", error);
+    }
   }
 
   useEffect(() => {
     fetchJenisPengobatan();
+    fetchListMetodePembayaran()
   }, [])
  
   //#endregion
@@ -48,7 +63,8 @@ const RegistrationPage = () => {
      
           <div>Jenis Kelamin</div>
           <select name="" id="" className='border'>
-            <option value="">Laki-Laki</option>
+            <option value={JENIS_KELAMIN.LAKI_LAKI} selected>Laki-Laki (L)</option>
+            <option value={JENIS_KELAMIN.PEREMPUAN}>Perempuan (P)</option>
           </select>
 
           <div>Alamat</div>
@@ -86,7 +102,11 @@ const RegistrationPage = () => {
 
         <div>Metode Pembayaran</div>
           <select name="" id="" className='border'>
-            <option value="">Cash / Ditempat</option>
+            {
+              listMetodePembayaran.map((pembayaran: MetodePembayaranProp) => (
+                <option value={pembayaran.id}>{pembayaran.nama}</option>
+              ))
+            }
         </select>
 
         <button 
