@@ -91,29 +91,35 @@ const RegistrationPage = () => {
 
      
           <div>Jenis Kelamin</div>
-          <select name="" id="" className='border'>
-            <option value={JENIS_KELAMIN.LAKI_LAKI} selected>Laki-Laki (L)</option>
-            <option value={JENIS_KELAMIN.PEREMPUAN}>Perempuan (P)</option>
-          </select>
+          <div className='flex gap-x-2'>
+            <div>
+              <input type="radio" value={JENIS_KELAMIN.LAKI_LAKI} name="jenis_kelamin"/>
+                Laki-Laki
+            </div>
+            <div>
+              <input type="radio" value={JENIS_KELAMIN.PEREMPUAN} name="jenis_kelamin"/>
+              Perempuan
+            </div>
+          </div>
 
           <div>Alamat</div>
-          <input type="text" className='border'/>
+         <textarea className="border h-20"></textarea>
 
-          <div>Peserta BPJS?</div>
-          <div className='flex'>
-            <div>
-              <input type="radio" name='peserta_bpjs' value={'ya'}/>
-              Ya
-            </div>
-            <div>
-              <input type="radio" name='peserta_bpjs' value={'asuransi_lain'}/>
-              Asuransi Lain
-            </div>
-            <div>
-              <input type="radio" name='peserta_bpjs' value={'tidak'}/>
-              Tidak
-            </div>
-        </div>
+          {/* <div>Peserta BPJS?</div>
+            <div className='flex'>
+              <div>
+                <input type="radio" name='peserta_bpjs' value={'ya'}/>
+                Ya
+              </div>
+              <div>
+                <input type="radio" name='peserta_bpjs' value={'asuransi_lain'}/>
+                Asuransi Lain
+              </div>
+              <div>
+                <input type="radio" name='peserta_bpjs' value={'tidak'}/>
+                Tidak
+              </div>
+          </div> */}
 
         <div>Pilih Pengobatan</div>
           <select 
