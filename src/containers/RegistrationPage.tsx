@@ -10,6 +10,7 @@ import { formatDateToJadwal, formatDateToYMD } from "../helpers/dateFormat";
 import type { JadwalPengobatanProp } from "../types/JadwalPengobatan.types";
 import { Controller, useForm } from "react-hook-form";
 import type { PendaftaranInput } from "../types/Pendaftaran.types";
+import PendaftaranService from "../services/pendaftaran.service";
 
 const RegistrationPage = () => {
   const navigate = useNavigate();
@@ -28,8 +29,20 @@ const RegistrationPage = () => {
   });
  
   const handleFormSubmit = (data: PendaftaranInput) => {
-    console.log("Form Submitted:", data);
-
+    insertPendaftaranAPI(data)
+    .then((pendaftaranId) => {
+      if(pendaftaranId) {
+        // If insert success, navigate to success page
+        navigate(`/success/${pendaftaranId}`);
+      } else {
+        // Handle error case
+        alert('Gagal mendaftar, silahkan coba lagi');
+      }
+    })
+    .catch((error) => {
+      console.error("Error inserting pendaftaran:", error);
+      alert('Terjadi kesalahan saat mendaftar, silahkan coba lagi');
+    });
     // navigate('/success')
   };
 
@@ -86,6 +99,16 @@ const RegistrationPage = () => {
     const selectedId = parseInt(e.target.value); 
     const selected = jenisPengobatan.find(jp => jp.id === selectedId) || null;
     setSelectedJenisPengobatan(selected);
+  };
+
+  const insertPendaftaranAPI = async (data: PendaftaranInput) => {
+    try {
+      const result = await PendaftaranService.insertPendaftaran(data);
+      return result;
+     
+    } catch (error) {
+      throw error;
+    }
   }
 
   useEffect(() => {

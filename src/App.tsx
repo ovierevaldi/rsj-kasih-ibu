@@ -12,7 +12,7 @@ function App() {
         <Route path='/' element={<HomePage />}/>
         <Route path='jadwal' element={<JadwalPengobatan />}/>
          <Route path='/register' element={<RegistrationPage />}/>
-         <Route path='/success' element={<SuccessRegisterPage />}/>
+         <Route path='/success/:id' element={<SuccessRegisterPage />}/>
       </Routes>
     </BrowserRouter>
   )
