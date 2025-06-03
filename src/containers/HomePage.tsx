@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import logoRs from  '../assets/logo_rs.jpg'
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -14,8 +15,8 @@ const HomePage = () => {
   return (
     <div className="flex flex-col h-screen items-center justify-center gap-8" >
       <div className="mb-2">
-        <div className="text-5xl text-center mb-4">Welcome To</div>
-        <div className="text-5xl text-center">RSJ Kasih Ibu</div>
+        <img src={logoRs} alt="" className="w-64 mb-8 mx-auto"/>
+        <div className="text-4xl text-center mb-4">Welcome To RSJ Kasih Ibu</div>
       </div>
 
       <div className="flex gap-x-12 text-2xl">

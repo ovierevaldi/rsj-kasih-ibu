@@ -11,6 +11,7 @@ import type { JadwalPengobatanProp } from "../types/JadwalPengobatan.types";
 import { Controller, useForm } from "react-hook-form";
 import type { PendaftaranInput } from "../types/Pendaftaran.types";
 import PendaftaranService from "../services/pendaftaran.service";
+import logoRs from  '../assets/logo_rs.jpg';
 
 const RegistrationPage = () => {
   const navigate = useNavigate();
@@ -128,7 +129,7 @@ const RegistrationPage = () => {
     <div className="pt-4 pb-8">
      <div className='flex justify-center items-center gap-x-4'>
         <div className="text-3xl">Pendaftaran Pasien RSJ Kasih Ibu</div>
-        <img src='https://placehold.co/100x100' alt='Logo RS' className="w-20"/>
+        <img src={logoRs} alt='Logo RS' className="w-14"/>
       </div>
 
       <br />
