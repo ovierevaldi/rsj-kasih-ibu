@@ -3,3 +3,11 @@
 #root {
   margin: 0 auto;
 }
+
+input {
+  @apply h-10 px-2
+}
+
+select {
+  @apply h-10 px-2
+}

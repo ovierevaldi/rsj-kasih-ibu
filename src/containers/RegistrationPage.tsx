@@ -125,21 +125,27 @@ const RegistrationPage = () => {
   //#endregion
 
   return (
-    <>
-     <div className='flex justify-center items-center'>
+    <div className="pt-4 pb-8">
+     <div className='flex justify-center items-center gap-x-4'>
         <div className="text-3xl">Pendaftaran Pasien RSJ Kasih Ibu</div>
-        <img src='https://placehold.co/100x100' alt='Logo RS'/>
+        <img src='https://placehold.co/100x100' alt='Logo RS' className="w-20"/>
       </div>
+
+      <br />
     
       <form 
         onSubmit={handleSubmit(handleFormSubmit)}
-        className='grid grid-cols-2'
+        className='grid grid-cols-[1fr_2fr] max-w-3xl mx-auto gap-6'
       >
           <div>Nama Pasien</div>
           <Controller 
             name="nama_pasien"
             render={({ field }) => (
-              <input {...field} type="text" className='border'/>
+              <input 
+                {...field} 
+                type="text" 
+                className='border'
+              />
             )}
             control={control}
           />
@@ -149,7 +155,11 @@ const RegistrationPage = () => {
           <Controller 
             name="tanggal_lahir"
             render={({ field }) => (
-              <input {...field} type="date" className='border'/>
+              <input 
+                {...field} 
+                type="date" 
+                className='border h-10'
+              />
             )}
             control={control}
           />
@@ -171,8 +181,9 @@ const RegistrationPage = () => {
             defaultValue={JENIS_KELAMIN.LAKI_LAKI}
             render={({ field }) => (
                 <div className='flex gap-x-2'>
-                  <div>
+                  <div className="flex items-center gap-x-2">
                     <input 
+                      className="cursor-pointer h-5 w-5"
                       type="radio" 
                       value={JENIS_KELAMIN.LAKI_LAKI} 
                       name={field.name}
@@ -181,8 +192,9 @@ const RegistrationPage = () => {
                     />
                       Laki-Laki
                   </div>
-                  <div>
+                  <div className="flex items-center gap-x-2">
                     <input 
+                      className="cursor-pointer h-5 w-5"
                       type="radio" 
                       value={JENIS_KELAMIN.PEREMPUAN} 
                       name={field.name}
@@ -195,19 +207,19 @@ const RegistrationPage = () => {
               )}
           />
 
-        <div>Alamat</div>
-        <Controller 
-          control={control}
-          name="alamat"
-          render={({ field }) => (
-            <textarea 
-              {...field}
-              className="border h-20" 
-            />
-          )}
-        />
+          <div>Alamat</div>
+          <Controller 
+            control={control}
+            name="alamat"
+            render={({ field }) => (
+              <textarea 
+                {...field}
+                className="border h-36" 
+              />
+            )}
+          />
 
-        <div>Keluhan</div>
+          <div>Keluhan</div>
           <Controller 
             name="keluhan"
             render={({ field }) => (
@@ -232,67 +244,66 @@ const RegistrationPage = () => {
             </div>
         </div> */}
 
-        <div>Pilih Pengobatan</div>
-        <select 
-          name="jenis-pengobatan" 
-          id="jenis-pengobatan" 
-          className='border'
-          onChange={handleSelectedJenisPengobatan}
-        >
-          {
-            jenisPengobatan.map((jp: JenisPengobatanProp) => (
-              <option key={jp.id} value={jp.id}>{jp.nama_pengobatan}</option>
-            ))
-          }
-        </select>
-
-        <div>Pilih Jam Pengobatan</div>
-        <Controller 
-          control={control}
-          name="jadwal_pengobatan_id"
-          render={({ field }) => (
-            <select 
-              name="" 
-              id="" 
-              className='border'
-              value={field.value}
-              onChange={(e) => {
-                field.onChange(parseInt(e.target.value))
-              }}
-            >
-              {
-                jadwalPengobatan.map((jp: JadwalPengobatanProp) => (
-                  <option 
-                    key={jp.id} 
-                    value={jp.id}
-                  >
-                    {jp.nama_dokter} {formatDateToJadwal(new Date(jp.jadwal))}
-                  </option>
-                ))
-              }
-            </select>
-          )}
-        />
-       
-
-        <div>Metode Pembayaran</div>
-          <select name="" id="" className='border'>
+          <div>Pilih Pengobatan</div>
+          <select 
+            name="jenis-pengobatan" 
+            id="jenis-pengobatan" 
+            className='border'
+            onChange={handleSelectedJenisPengobatan}
+          >
             {
-              listMetodePembayaran.map((pembayaran: MetodePembayaranProp) => (
-                <option key={pembayaran.id} value={pembayaran.id}>{pembayaran.nama}</option>
+              jenisPengobatan.map((jp: JenisPengobatanProp) => (
+                <option key={jp.id} value={jp.id}>{jp.nama_pengobatan}</option>
               ))
             }
-        </select>
+          </select>
 
-        <button 
-          className='bg-[#125DFF] text-white roonded col-span-2 p-2'
-          type="submit"
-        >
-          Daftar
-        </button>
-     
+          <div>Pilih Jam Pengobatan</div>
+          <Controller 
+            control={control}
+            name="jadwal_pengobatan_id"
+            render={({ field }) => (
+              <select 
+                name="" 
+                id="" 
+                className='border'
+                value={field.value}
+                onChange={(e) => {
+                  field.onChange(parseInt(e.target.value))
+                }}
+              >
+                {
+                  jadwalPengobatan.map((jp: JadwalPengobatanProp) => (
+                    <option 
+                      key={jp.id} 
+                      value={jp.id}
+                    >
+                      {jp.nama_dokter} {formatDateToJadwal(new Date(jp.jadwal))}
+                    </option>
+                  ))
+                }
+              </select>
+            )}
+          />
+       
+
+          <div>Metode Pembayaran</div>
+            <select name="" id="" className='border'>
+              {
+                listMetodePembayaran.map((pembayaran: MetodePembayaranProp) => (
+                  <option key={pembayaran.id} value={pembayaran.id}>{pembayaran.nama}</option>
+                ))
+              }
+          </select>
+
+          <button 
+            className='bg-[#125DFF] text-white rounded-lg col-span-2 p-2'
+            type="submit"
+          >
+            Daftar
+          </button>
       </form>
-    </>
+    </div>
   )
 }
 
