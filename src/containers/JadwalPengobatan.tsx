@@ -25,46 +25,57 @@ const JadwalPengobatan = () => {
   //#endregion
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-4">
-        <div>Pilih Pengobatan</div>
-        <select name="" id="">
-          <option value=""></option>
-        </select>
-
-        <div>Pilih Pengobatan</div>
-        <input type="date"
-          value={formatDateToYMD(selectedDate)}
-          className="border border-gray-300 rounded px-2 py-1"
-          onChange={(e) => {
-            const d = new Date(e.target.value);
-            setSelectedDate(d)
-            // fetchJadwalPengobatanByDate(selectedDate)
+    <div className="max-w-6xl mx-auto p-8">
+       <div className="text-center text-3xl font-bold mb-12">Jadwal Pengobatan</div>
+      <div className="flex justify-around text-2xl">
+        <div className="flex items-center gap-8">
+          <div>Pilih Pengobatan</div>
+          <select name="" id="" className="border min-w-64">
+            <option value="">Test</option>
+          </select>
+        </div>
+        <div className="flex items-center gap-8">
+          <div>Pilih Hari</div>
+          <input 
+            type="date"
+            value={formatDateToYMD(selectedDate)}
+            className="border min-w-64"
+            onChange={(e) => {
+              const d = new Date(e.target.value);
+              setSelectedDate(d)
+              // fetchJadwalPengobatanByDate(selectedDate)
+              }
+            
             }
-          }
-        />
+          />
+        </div>
       </div>
-
-      <div>
+      <br />
+      <br />
+     
+      <div className="text-2xl">
         {
           !jadwalPengobatan.length && <div>Tidak ada data</div>
         }
         {
           jadwalPengobatan.length !== 0 && (
-            <div>
-              <table>
-                <thead>
+            <div className=" border rounded-xl p-8">
+              <table className="w-full text-center">
+                <thead className="border-b-2">
                   <tr>
-                    <th>Jam</th>
-                    <th>Dokter</th>
+                    <th className="py-4">Jam</th>
+                    <th className="py-4">Dokter</th>
                   </tr>
                 </thead>
                 <tbody>
                    {
                     jadwalPengobatan.map((jp) => (
-                      <tr key={jp.id}>
-                        <td>{getLocalTimeString(new Date(jp.jadwal))}</td>
-                        <td>{jp.nama_dokter}</td>
+                      <tr 
+                        key={jp.id}
+                        className="border-b hover:bg-gray-100 transition duration-200"
+                      >
+                        <td className="py-4">{getLocalTimeString(new Date(jp.jadwal))}</td>
+                        <td className="py-4">{jp.nama_dokter}</td>
                       </tr>
                     ))
                   }
