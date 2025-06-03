@@ -8,18 +8,34 @@ import { JENIS_KELAMIN } from "../types/JenisKelamin.enum";
 import JadwalPengobatanService from "../services/jadwalPengobatan.service";
 import { formatDateToJadwal, formatDateToYMD } from "../helpers/dateFormat";
 import type { JadwalPengobatanProp } from "../types/JadwalPengobatan.types";
+import { Controller, useForm } from "react-hook-form";
+import type { PendaftaranInput } from "../types/Pendaftaran.types";
 
 const RegistrationPage = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    navigate('/success')
+  const { control, handleSubmit, setValue } = useForm<PendaftaranInput>({
+    defaultValues: {
+      nama_pasien: '',
+      tanggal_lahir: '',
+      tempat_lahir: '',
+      jenis_kelamin: JENIS_KELAMIN.LAKI_LAKI,
+      alamat: '',
+      keluhan: '',
+      jadwal_pengobatan_id: undefined,
+      metode_pembayaran_id: undefined
+    }
+  });
+ 
+  const handleFormSubmit = (data: PendaftaranInput) => {
+    console.log("Form Submitted:", data);
+
+    // navigate('/success')
   };
 
   const [jenisPengobatan, setJenisPengobatan] = useState<JenisPengobatanProp[]>([]);
   const [listMetodePembayaran, setListMetodePembayaran] = useState<MetodePembayaranProp[]>([]);
   const [jadwalPengobatan, setJadwalPengobatan] = useState<JadwalPengobatanProp[]>([]);
-
   const [selectedJenisPengobatan, setSelectedJenisPengobatan] = useState<JenisPengobatanProp | null>(null);
 
   //#region API Calls
@@ -27,7 +43,9 @@ const RegistrationPage = () => {
     try {
       const data = await JenisPengobatanService.getListJenisPengobatan();
       setJenisPengobatan(data);
-      setSelectedJenisPengobatan(data[0] || null); // Set the first item as default if available
+
+      // Set default selected jenis pengobatan to the first one affer refetch
+      setSelectedJenisPengobatan(data[0] || null);
 
     } catch (error) {
       console.error("Error fetching dokter list:", error);
@@ -38,6 +56,10 @@ const RegistrationPage = () => {
     try {
       const data = await MetodePembayaranService.getListMetodePembayaran();
       setListMetodePembayaran(data);
+      // Set default value for metode pembayaran after refetch
+      if(data.length > 0) {
+        setValue('metode_pembayaran_id', data[0].id);
+      }
 
     } catch (error) {
       console.error("Error fetching dokter list:", error);
@@ -48,7 +70,13 @@ const RegistrationPage = () => {
     try {
       const formatDate = formatDateToYMD(new Date());
       const data = await JadwalPengobatanService.getListJadwalPengobatan(formatDate, selectedJenisPengobatan?.id);
-      setJadwalPengobatan(data)
+      setJadwalPengobatan(data);
+      
+      //set default value for jadwal_pengobatan_id after refetch
+      if(data.length > 0) {
+        setValue('jadwal_pengobatan_id', data[0].id);
+      } 
+
     } catch (error) {
       
     }
@@ -63,9 +91,9 @@ const RegistrationPage = () => {
   useEffect(() => {
     fetchJenisPengobatan();
     fetchListMetodePembayaran();
-    
   }, []);
 
+  // Get jadwal pengobatan hari ini when selectedJenisPengobatan changes
   useEffect(() => {
     if(!selectedJenisPengobatan) return;
     fetchJadwalPengobatanHariIni();
@@ -75,87 +103,167 @@ const RegistrationPage = () => {
 
   return (
     <>
-     <div className='flex items-center'>
-        <div>Pendaftaran Pasien RSJ Kasih Ibu</div>
+     <div className='flex justify-center items-center'>
+        <div className="text-3xl">Pendaftaran Pasien RSJ Kasih Ibu</div>
         <img src='https://placehold.co/100x100' alt='Logo RS'/>
       </div>
-    {
-      JSON.stringify(jenisPengobatan)
-    }
-      <form action="" className='grid grid-cols-2'>
+    
+      <form 
+        onSubmit={handleSubmit(handleFormSubmit)}
+        className='grid grid-cols-2'
+      >
           <div>Nama Pasien</div>
-          <input type="text" className='border' />
+          <Controller 
+            name="nama_pasien"
+            render={({ field }) => (
+              <input {...field} type="text" className='border'/>
+            )}
+            control={control}
+          />
+          
 
           <div>Tanggal Lahir</div>
-          <input type="date" className='border' />
+          <Controller 
+            name="tanggal_lahir"
+            render={({ field }) => (
+              <input {...field} type="date" className='border'/>
+            )}
+            control={control}
+          />
+
+          <div>Tempat Lahir</div>
+          <Controller 
+            name="tempat_lahir"
+            render={({ field }) => (
+              <input {...field} type="text" className='border'/>
+            )}
+            control={control}
+          />
 
      
           <div>Jenis Kelamin</div>
-          <div className='flex gap-x-2'>
+          <Controller 
+            control={control}
+            name="jenis_kelamin"
+            defaultValue={JENIS_KELAMIN.LAKI_LAKI}
+            render={({ field }) => (
+                <div className='flex gap-x-2'>
+                  <div>
+                    <input 
+                      type="radio" 
+                      value={JENIS_KELAMIN.LAKI_LAKI} 
+                      name={field.name}
+                      onChange={field.onChange}
+                      checked={field.value === JENIS_KELAMIN.LAKI_LAKI}
+                    />
+                      Laki-Laki
+                  </div>
+                  <div>
+                    <input 
+                      type="radio" 
+                      value={JENIS_KELAMIN.PEREMPUAN} 
+                      name={field.name}
+                      onChange={field.onChange}
+                      checked={field.value === JENIS_KELAMIN.PEREMPUAN}
+                    />
+                    Perempuan
+                  </div>
+                </div>
+              )}
+          />
+
+        <div>Alamat</div>
+        <Controller 
+          control={control}
+          name="alamat"
+          render={({ field }) => (
+            <textarea 
+              {...field}
+              className="border h-20" 
+            />
+          )}
+        />
+
+        <div>Keluhan</div>
+          <Controller 
+            name="keluhan"
+            render={({ field }) => (
+              <input {...field} type="text" className='border'/>
+            )}
+            control={control}
+          />
+
+        {/* <div>Peserta BPJS?</div>
+          <div className='flex'>
             <div>
-              <input type="radio" value={JENIS_KELAMIN.LAKI_LAKI} name="jenis_kelamin"/>
-                Laki-Laki
+              <input type="radio" name='peserta_bpjs' value={'ya'}/>
+              Ya
             </div>
             <div>
-              <input type="radio" value={JENIS_KELAMIN.PEREMPUAN} name="jenis_kelamin"/>
-              Perempuan
+              <input type="radio" name='peserta_bpjs' value={'asuransi_lain'}/>
+              Asuransi Lain
             </div>
-          </div>
-
-          <div>Alamat</div>
-         <textarea className="border h-20"></textarea>
-
-          {/* <div>Peserta BPJS?</div>
-            <div className='flex'>
-              <div>
-                <input type="radio" name='peserta_bpjs' value={'ya'}/>
-                Ya
-              </div>
-              <div>
-                <input type="radio" name='peserta_bpjs' value={'asuransi_lain'}/>
-                Asuransi Lain
-              </div>
-              <div>
-                <input type="radio" name='peserta_bpjs' value={'tidak'}/>
-                Tidak
-              </div>
-          </div> */}
+            <div>
+              <input type="radio" name='peserta_bpjs' value={'tidak'}/>
+              Tidak
+            </div>
+        </div> */}
 
         <div>Pilih Pengobatan</div>
-          <select 
-            name="jenis-pengobatan" 
-            id="jenis-pengobatan" 
-            className='border'
-            onChange={handleSelectedJenisPengobatan}
-          >
-            {
-              jenisPengobatan.map((jp: JenisPengobatanProp) => (
-                <option value={jp.id}>{jp.nama_pengobatan}</option>
-              ))
-            }
-          </select>
+        <select 
+          name="jenis-pengobatan" 
+          id="jenis-pengobatan" 
+          className='border'
+          onChange={handleSelectedJenisPengobatan}
+        >
+          {
+            jenisPengobatan.map((jp: JenisPengobatanProp) => (
+              <option key={jp.id} value={jp.id}>{jp.nama_pengobatan}</option>
+            ))
+          }
+        </select>
 
         <div>Pilih Jam Pengobatan</div>
-          <select name="" id="" className='border'>
-            {
-              jadwalPengobatan.map((jp: JadwalPengobatanProp) => (
-                <option value={jp.id}>{jp.nama_dokter} {formatDateToJadwal(new Date(jp.jadwal))}</option>
-              ))
-            }
-        </select>
+        <Controller 
+          control={control}
+          name="jadwal_pengobatan_id"
+          render={({ field }) => (
+            <select 
+              name="" 
+              id="" 
+              className='border'
+              value={field.value}
+              onChange={(e) => {
+                field.onChange(parseInt(e.target.value))
+              }}
+            >
+              {
+                jadwalPengobatan.map((jp: JadwalPengobatanProp) => (
+                  <option 
+                    key={jp.id} 
+                    value={jp.id}
+                  >
+                    {jp.nama_dokter} {formatDateToJadwal(new Date(jp.jadwal))}
+                  </option>
+                ))
+              }
+            </select>
+          )}
+        />
+       
 
         <div>Metode Pembayaran</div>
           <select name="" id="" className='border'>
             {
               listMetodePembayaran.map((pembayaran: MetodePembayaranProp) => (
-                <option value={pembayaran.id}>{pembayaran.nama}</option>
+                <option key={pembayaran.id} value={pembayaran.id}>{pembayaran.nama}</option>
               ))
             }
         </select>
 
         <button 
           className='bg-[#125DFF] text-white roonded col-span-2 p-2'
-          onClick={() => handleSubmit()}
+          type="submit"
         >
           Daftar
         </button>
