@@ -1,11 +1,13 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import type { JadwalPengobatanProp } from "../types/JadwalPengobatan.types"
 import JadwalPengobatanService from "../services/jadwalPengobatan.service"
 import { formatDateToYMD, getLocalTimeString } from "../helpers/dateFormat"
 
 const JadwalPengobatan = () => {
 
-  const [jadwalPengobatan, setJadwalPengobatan] = useState<JadwalPengobatanProp[] | null>(null);
+  const [jadwalPengobatan, setJadwalPengobatan] = useState<JadwalPengobatanProp[]>([]);
+
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date()); 
   
   //#region API Calls
   const fetchJadwalPengobatanByDate = async (selectedDate: Date) => {
@@ -14,7 +16,11 @@ const JadwalPengobatan = () => {
     const data = await JadwalPengobatanService.getListJadwalPengobatan(formatDate);
 
     setJadwalPengobatan(data)
-  }
+  };
+
+  useEffect(() => {
+    fetchJadwalPengobatanByDate(selectedDate);
+  }, [selectedDate])
 
   //#endregion
 
@@ -27,11 +33,13 @@ const JadwalPengobatan = () => {
         </select>
 
         <div>Pilih Pengobatan</div>
-        <input type="date" 
+        <input type="date"
+          value={formatDateToYMD(selectedDate)}
           className="border border-gray-300 rounded px-2 py-1"
           onChange={(e) => {
-            const selectedDate = new Date(e.target.value)
-            fetchJadwalPengobatanByDate(selectedDate)
+            const d = new Date(e.target.value);
+            setSelectedDate(d)
+            // fetchJadwalPengobatanByDate(selectedDate)
             }
           }
         />
@@ -39,10 +47,10 @@ const JadwalPengobatan = () => {
 
       <div>
         {
-          jadwalPengobatan === null && <div>No Date Selected</div>
+          !jadwalPengobatan.length && <div>Tidak ada data</div>
         }
         {
-          jadwalPengobatan !== null && (
+          jadwalPengobatan.length !== 0 && (
             <div>
               <table>
                 <thead>
@@ -55,8 +63,8 @@ const JadwalPengobatan = () => {
                    {
                     jadwalPengobatan.map((jp) => (
                       <tr key={jp.id}>
-                         <td>{getLocalTimeString(new Date(jp.jadwal))}</td>
-                         <td>{jp.nama_dokter}</td>
+                        <td>{getLocalTimeString(new Date(jp.jadwal))}</td>
+                        <td>{jp.nama_dokter}</td>
                       </tr>
                     ))
                   }
