@@ -2,25 +2,50 @@ import { useEffect, useState } from "react"
 import type { JadwalPengobatanProp } from "../types/JadwalPengobatan.types"
 import JadwalPengobatanService from "../services/jadwalPengobatan.service"
 import { formatDateToYMD, getLocalTimeString } from "../helpers/dateFormat"
+import JenisPengobatanService from "../services/jenisPengobatan.service"
+import type { JenisPengobatanProp } from "../types/JenisPengobatan.types"
 
 const JadwalPengobatan = () => {
 
   const [jadwalPengobatan, setJadwalPengobatan] = useState<JadwalPengobatanProp[]>([]);
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date()); 
+  const [selectedJenisPengobatan, setSelectedJenisPengobatan] = useState<number | null>(null);
+
+  const [listJenisPengobatan, setListJenisPengobatan] = useState<JenisPengobatanProp[]>([]);
+
+  const handleChangeJenisPengobatan = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedId = parseInt(e.target.value, 10);
+    setSelectedJenisPengobatan(selectedId);
+  }
   
   //#region API Calls
-  const fetchJadwalPengobatanByDate = async (selectedDate: Date) => {
+  const fetchJadwalPengobatanByDate = async () => {
     const formatDate = formatDateToYMD(selectedDate);
 
+   if(!selectedJenisPengobatan){
     const data = await JadwalPengobatanService.getListJadwalPengobatan(formatDate);
-
     setJadwalPengobatan(data)
+   }
+   else{
+    const data = await JadwalPengobatanService.getListJadwalPengobatan(formatDate, selectedJenisPengobatan);
+    setJadwalPengobatan(data)
+   }
+  };
+
+  const fetchJenisPengobatan = async () => {
+    const data = await JenisPengobatanService.getListJenisPengobatan();
+    setListJenisPengobatan(data as JenisPengobatanProp[]);
+    setSelectedJenisPengobatan(data[0]?.id || null);
   };
 
   useEffect(() => {
-    fetchJadwalPengobatanByDate(selectedDate);
-  }, [selectedDate])
+    fetchJenisPengobatan();
+  }, [])
+
+  useEffect(() => {
+    fetchJadwalPengobatanByDate();
+  }, [selectedDate, selectedJenisPengobatan])
 
   //#endregion
 
@@ -30,8 +55,18 @@ const JadwalPengobatan = () => {
       <div className="flex justify-around text-2xl">
         <div className="flex items-center gap-8">
           <div>Pilih Pengobatan</div>
-          <select name="" id="" className="border min-w-64">
-            <option value="">Test</option>
+          <select 
+            name="" 
+            id="" 
+            value={selectedJenisPengobatan || ""}
+            className="border min-w-64"
+            onChange={handleChangeJenisPengobatan}
+          >
+           {
+            listJenisPengobatan.map((jp) => (
+              <option value={jp.id}>{jp.nama_pengobatan}</option>
+            ))
+           }
           </select>
         </div>
         <div className="flex items-center gap-8">
@@ -54,37 +89,36 @@ const JadwalPengobatan = () => {
       <br />
      
       <div className="text-2xl">
-        {
-          !jadwalPengobatan.length && <div>Tidak ada data</div>
-        }
-        {
-          jadwalPengobatan.length !== 0 && (
-            <div className=" border rounded-xl p-8">
-              <table className="w-full text-center">
-                <thead className="border-b-2">
-                  <tr>
-                    <th className="py-4">Jam</th>
-                    <th className="py-4">Dokter</th>
-                  </tr>
-                </thead>
-                <tbody>
-                   {
-                    jadwalPengobatan.map((jp) => (
-                      <tr 
-                        key={jp.id}
-                        className="border-b hover:bg-gray-100 transition duration-200"
-                      >
-                        <td className="py-4">{getLocalTimeString(new Date(jp.jadwal))}</td>
-                        <td className="py-4">{jp.nama_dokter}</td>
-                      </tr>
-                    ))
-                  }
-                </tbody>
-              </table>
-             
-            </div>
-          )
-        }
+        <div className=" border rounded-xl p-8">
+          {
+            !jadwalPengobatan.length && <div className="text-center">Tidak ada data</div>
+          }
+          {
+            jadwalPengobatan.length !== 0 && (
+            <table className="w-full text-center">
+              <thead className="border-b-2">
+                <tr>
+                  <th className="py-4">Jam</th>
+                  <th className="py-4">Dokter</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  jadwalPengobatan.map((jp) => (
+                    <tr 
+                      key={jp.id}
+                      className="border-b hover:bg-gray-100 transition duration-200"
+                    >
+                      <td className="py-4">{getLocalTimeString(new Date(jp.jadwal))}</td>
+                      <td className="py-4">{jp.nama_dokter}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+            )
+          }
+        </div>
       </div>
     </div>
   )
