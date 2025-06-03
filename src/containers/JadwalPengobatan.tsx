@@ -56,7 +56,7 @@ const JadwalPengobatan = () => {
                     jadwalPengobatan.map((jp) => (
                       <tr key={jp.id}>
                          <td>{getLocalTimeString(new Date(jp.jadwal))}</td>
-                        <td>{jp.id_dokter}</td>
+                         <td>{jp.nama_dokter}</td>
                       </tr>
                     ))
                   }
