@@ -12,7 +12,7 @@ const SuccessRegisterPage = () => {
   //#region API Calls
   const fetchPendaftaranDetails = async (pendaftaranId: string) => {
     const result = await PendaftaranService.getPendaftaranDetailById(Number(pendaftaranId));
-
+    console.log(result)
     if (result) {
       setPendaftaranDetails({
         nama_pasien: result.nama_pasien,
