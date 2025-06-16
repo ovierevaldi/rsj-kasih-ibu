@@ -56,8 +56,17 @@ const SuccessRegisterPage = () => {
           <div>Pembayaran:</div>
           <div className="font-semibold">{pendaftaranDetails.metode_pembayaran}</div>
 
-          <button className="bg-[#125DFF] text-white rounded hover:bg-[#0f4dbb] transition-colors duration-300 cursor-pointer py-2">Print / Cetak</button>
-          <button className="bg-[#125DFF] text-white rounded hover:bg-[#0f4dbb] transition-colors duration-300 cursor-pointer py-2">Save PDF</button>
+          <button 
+            className="bg-[#125DFF] text-white rounded hover:bg-[#0f4dbb] transition-colors duration-300 cursor-pointer py-2 disabled:bg-[#123eff75]"
+            disabled
+          >
+            Print / Cetak
+          </button>
+          <button 
+            disabled
+            className="bg-[#125DFF] text-white rounded hover:bg-[#0f4dbb] transition-colors duration-300 cursor-pointer py-2 disabled:bg-[#123eff75]">
+            Save PDF
+          </button>
         </div>
 
         <div className="absolute right-0 bottom-0 text-base p-4">
