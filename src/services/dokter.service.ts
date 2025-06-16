@@ -4,7 +4,7 @@ import type { DokterProp } from "../types/Dokter.types";
 export default class DokterService {
   static async getListDokter(): Promise<DokterProp[]>{
     try {
-      const listDokter = await axios.get('http://localhost:3000/dokter');
+      const listDokter = await axios.get(`${import.meta.env.VITE_API_ADDRESS}/dokter`);
 
       return listDokter.data as DokterProp[];
     } catch (error) {

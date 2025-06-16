@@ -4,7 +4,7 @@ import type { JenisPengobatanProp } from "../types/JenisPengobatan.types";
 export default class JenisPengobatanService {
   static async getListJenisPengobatan(): Promise<JenisPengobatanProp[]>{
     try {
-      const listJenisPengobatan = await axios.get('http://localhost:3000/jenis-pengobatan');
+      const listJenisPengobatan = await axios.get(`${import.meta.env.VITE_API_ADDRESS}/jenis-pengobatan`);
 
       return listJenisPengobatan.data as JenisPengobatanProp[];
     } catch (error) {

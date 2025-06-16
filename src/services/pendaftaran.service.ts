@@ -4,7 +4,7 @@ import type { PendaftaranInput, PendaftaranProp } from "../types/Pendaftaran.typ
 export default class PendaftaranService {
   static async insertPendaftaran(data: PendaftaranInput): Promise<number | null>{
     try {
-      const result = await axios.post('http://localhost:3000/pendaftaran', {
+      const result = await axios.post(`${import.meta.env.VITE_API_ADDRESS}/pendaftaran`, {
         ...data
       });
 
@@ -19,7 +19,7 @@ export default class PendaftaranService {
 
   static async getPendaftaranDetailById(id: number): Promise<any | null>{
     try {
-      const result = await axios.get('http://localhost:3000/pendaftaran/' + id);
+      const result = await axios.get(`${import.meta.env.VITE_API_ADDRESS}/pendaftaran/` + id);
      
       if(result.status === 200) {
         return result.data;
