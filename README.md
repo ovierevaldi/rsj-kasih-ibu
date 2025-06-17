@@ -1,54 +1,11 @@
-# React + TypeScript + Vite
+This project is the Website Application for RSJ Kasih Ibu. This website has feature such Registration for Medical Checkup, See the Available Schedule for Today at RSJ Kasih IBU. 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+BEFORE INSTALL
+1. Have NodeJS installed (Recomended Version 18 Above)
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+INSTALLATION:
+1. copy .env into this folder from: https://www.dropbox.com/scl/fi/urlgf3ykgtta2c1ekwayq/.env?rlkey=zvhdhkojd74k9vmfbqgsn1k5b&st=a3wfgoqs&dl=0
+2. install depedency by running this command in CLI: npm install
+3. Run the apps by running: npm run dev
+4. Open the Website URL: http://localhost:5173/
+5. Try to see the Jadwal or Doing some Registration. This Website needs to connect with the Server RSJ Kasih Ibu for the data transactions.
