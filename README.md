@@ -9,3 +9,5 @@ INSTALLATION:
 3. Run the apps by running: npm run dev
 4. Open the Website URL: http://localhost:5173/
 5. Try to see the Jadwal or Doing some Registration. This Website needs to connect with the Server RSJ Kasih Ibu for the data transactions.
+
+This Projects stil need a lot of improvement tho, in the server also in the website but this is all i can do for now.
